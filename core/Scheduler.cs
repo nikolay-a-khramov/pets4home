@@ -42,9 +42,10 @@ namespace pets4home.core
         {
             WaitUntilCompleted(new List<Timer>(tasks.Values));
             tasks.Clear();
+            log.Info("All tasks removed.");
         }
 
-        void WaitUntilCompleted(List<Timer> timers)
+        private void WaitUntilCompleted(List<Timer> timers)
         {
             List<WaitHandle> waitHandles = new List<WaitHandle>();
             foreach (var timer in timers)

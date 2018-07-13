@@ -32,7 +32,17 @@ namespace pets4home.core
 
         private IWebDriver Driver { get; set; }
 
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                return String.Format("Advert refresh for '{0}'", this);
+            }
+            set
+            {
+                Name = value;
+            }
+        }
         public TimeSpan Interval { get; set; }
         public bool Enabled { get; set; }
 
@@ -41,16 +51,15 @@ namespace pets4home.core
             Username = username;
             Password = password;
             Title = title;
-            Name = String.Format("Advert refresh for '{0}'", Title);
             Interval = interval;
         }
 
         public void Refresh()
         {
             Driver = new ChromeDriver();
-            log.Info("Refreshing Advert: " + this);
+            log.Info(String.Format("{0} refreshing ", this));
             ClickRefreshIcon(Login().FindAdByTitle());
-            log.Info("Refreshed successfully.");
+            log.Info(String.Format("{0} refreshed successfully ", this));
             Driver.Quit();
         }
 
@@ -59,7 +68,7 @@ namespace pets4home.core
         {
             Driver.Url = URL_BASE;
 
-            log.Debug("Performing login for: " + Username);
+            log.Debug(String.Format("[{0}] Performing login for: {1}", this, Username));
             IWebElement fieldLogin = Driver.FindElement(LOCATOR_FLD_LOGIN);
             IWebElement fieldPass = Driver.FindElement(LOCATOR_FLD_PASS);
             IWebElement btnLogin = Driver.FindElement(LOCATOR_BTN_LOGIN);
@@ -99,7 +108,7 @@ namespace pets4home.core
 
         public override string ToString()
         {
-            return String.Format("Advert: {{Title: '{0}', Owner: '{1} {2}'}}", 
+            return String.Format("Advert: '{0}'|{1} {2}", 
                 Title, FirstName, LastName);
         }
 
