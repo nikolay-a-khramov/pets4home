@@ -56,7 +56,11 @@ namespace pets4home.core
 
         public void Refresh()
         {
-            Driver = new ChromeDriver();
+            ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--headless");
+            options.AddArgument("--disable-gpu");
+            options.AddArgument("--window-size=1920,1080");
+            Driver = new ChromeDriver(options);
             log.Info(String.Format("{0} refreshing ", this));
             ClickRefreshIcon(Login().FindAdByTitle());
             log.Info(String.Format("{0} refreshed successfully ", this));

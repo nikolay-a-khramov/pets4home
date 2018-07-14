@@ -50,7 +50,7 @@ namespace pets4home
             {
                 Console.WriteLine("Press enter to stop the last added task");
                 Console.ReadLine();
-                scheduler.RemoveTask(ads.Peek());
+                scheduler.RemoveTask(ads.Pop());
             }
             
             Console.WriteLine("Press enter to exit...");
