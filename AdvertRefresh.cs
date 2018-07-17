@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
 using pets4home.core;
 using log4net.Config;
 using log4net;
+using System.IO;
+using System.Text;
 
 namespace pets4home
 {
@@ -28,29 +25,11 @@ namespace pets4home
             var logRepository = LogManager.GetRepository(System.Reflection.Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new System.IO.FileInfo("log4net.config"));
 
-            //ChromeDriverService serviceCR = ChromeDriverService.CreateDefaultService();
-            //serviceCR.Port = 9510;
-            //IWebDriver driver = new ChromeDriver(serviceCR);
-
-            int count = 10;
-            Stack<Advert> ads = new Stack<Advert>();
-
-            for (int i = 0; i < count;  i++)
+            CsvReader reader = new CsvReader("adverts.csv");
+            while (reader.hasMoreRows())
             {
-                Advert ad = new Advert(LOGIN, PASS, AD_TO_REFRESH_TITLE, TimeSpan.FromSeconds((i + 1) * 30));
-                ad.FirstName = "firstName_" + i;
-                ad.LastName = "lastName_" + i;
-                ad.Enabled = true;
-                ads.Push(ad);
-                scheduler.AddTask(ad);
-                System.Threading.Thread.Sleep(15000);
-            }
-
-            for (int i = 0; i < count / 5; i++)
-            {
-                Console.WriteLine("Press enter to stop the last added task");
-                Console.ReadLine();
-                scheduler.RemoveTask(ads.Pop());
+                var row = reader.getNextRow();
+                scheduler.AddTask(Advert.fromProperties(row));
             }
             
             Console.WriteLine("Press enter to exit...");

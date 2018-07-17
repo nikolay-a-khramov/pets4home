@@ -56,6 +56,9 @@ namespace pets4home.core
 
         public void Refresh()
         {
+            //ChromeDriverService serviceCR = ChromeDriverService.CreateDefaultService();
+            //serviceCR.Port = 9510;
+            //IWebDriver driver = new ChromeDriver(serviceCR);
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--headless");
             options.AddArgument("--disable-gpu");
@@ -126,6 +129,17 @@ namespace pets4home.core
 
             log.Info("Executing task: " + Name);
             Refresh();
+        }
+
+        public static Advert fromProperties(IDictionary<string, string> properties)
+        {
+            double intervalMins = Double.Parse(properties["intervalMins"]);
+            Advert ad = new Advert(properties["login"], properties["password"], properties["title"],
+                TimeSpan.FromMinutes(intervalMins));
+            ad.FirstName = properties["firstName"];
+            ad.LastName = properties["lastName"];
+            ad.Enabled = Boolean.Parse(properties["enabled"]);
+            return ad;
         }
     }
 }
