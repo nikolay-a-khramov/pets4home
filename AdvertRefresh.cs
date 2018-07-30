@@ -9,12 +9,9 @@ namespace pets4home
 {
     class AdvertRefresh
     {
-        private static readonly log4net.ILog log =
-            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log =
+            LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static readonly String AD_TO_REFRESH_TITLE = "Fish for Sale";
-        private static readonly String LOGIN = "christian_yeates@yahoo.co.uk";
-        private static readonly String PASS = "Petspassword1";
 
         private static readonly Scheduler scheduler = new Scheduler();
 
@@ -23,7 +20,7 @@ namespace pets4home
             System.AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionTrapper;
 
             var logRepository = LogManager.GetRepository(System.Reflection.Assembly.GetEntryAssembly());
-            XmlConfigurator.Configure(logRepository, new System.IO.FileInfo("log4net.config"));
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
 
             CsvReader reader = new CsvReader("adverts.csv");
             while (reader.hasMoreRows())
@@ -31,7 +28,7 @@ namespace pets4home
                 var row = reader.getNextRow();
                 scheduler.AddTask(Advert.fromProperties(row));
             }
-            
+
             Console.WriteLine("Press enter to exit...");
             Console.ReadLine();
 

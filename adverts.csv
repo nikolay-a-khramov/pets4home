@@ -1,2 +1,2 @@
-firstName, lastName, login                       , password     , title        , intervalMins, enabled
-John     , Smith   , christian_yeates@yahoo.co.uk, Petspassword1, Fish for Sale, 5           , true
+firstName, lastName, login                       , password     , title        , intervalMins, rangeMins, enabled
+John     , Smith   , christian_yeates@yahoo.co.uk, Petspassword1, Fish for Sale, 5           , 6      , true

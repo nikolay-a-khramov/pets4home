@@ -40,13 +40,6 @@ namespace pets4home.core
                     rows.Enqueue(row);
                 }
             }
-            Console.WriteLine("Created reader from " + path);
-            Console.WriteLine("Headers are:");
-            foreach (string h in headers)
-            {
-                Console.Write(h + ", ");
-            }
-            Console.WriteLine();
         }
 
         public bool hasMoreRows()

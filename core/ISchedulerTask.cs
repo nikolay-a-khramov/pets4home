@@ -8,6 +8,7 @@ namespace pets4home.core
     {
         string Name { get; set; }
         TimeSpan Interval { get; set; }
+        TimeSpan RangeSize { get; set; }
         bool Enabled { get; set; }
         void Execute();
     }

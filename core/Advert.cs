@@ -36,7 +36,7 @@ namespace pets4home.core
         {
             get
             {
-                return String.Format("Advert refresh for '{0}'", this);
+                return $"Advert refresh for '{this}'";
             }
             set
             {
@@ -44,14 +44,16 @@ namespace pets4home.core
             }
         }
         public TimeSpan Interval { get; set; }
+        public TimeSpan RangeSize { get; set; }
         public bool Enabled { get; set; }
 
-        public Advert(String username, String password, String title, TimeSpan interval)
+        public Advert(String username, String password, String title, TimeSpan interval, TimeSpan range)
         {
             Username = username;
             Password = password;
             Title = title;
             Interval = interval;
+            RangeSize = range;
         }
 
         public void Refresh()
@@ -64,9 +66,9 @@ namespace pets4home.core
             options.AddArgument("--disable-gpu");
             options.AddArgument("--window-size=1920,1080");
             Driver = new ChromeDriver(options);
-            log.Info(String.Format("{0} refreshing ", this));
+            log.Info($"[{this}] refreshing");
             ClickRefreshIcon(Login().FindAdByTitle());
-            log.Info(String.Format("{0} refreshed successfully ", this));
+            log.Info($"[{this}] refreshed successfully");
             Driver.Quit();
         }
 
@@ -75,7 +77,7 @@ namespace pets4home.core
         {
             Driver.Url = URL_BASE;
 
-            log.Debug(String.Format("[{0}] Performing login for: {1}", this, Username));
+            log.Debug($"[{this}] Performing login for: {Username}");
             IWebElement fieldLogin = Driver.FindElement(LOCATOR_FLD_LOGIN);
             IWebElement fieldPass = Driver.FindElement(LOCATOR_FLD_PASS);
             IWebElement btnLogin = Driver.FindElement(LOCATOR_BTN_LOGIN);
@@ -100,9 +102,9 @@ namespace pets4home.core
                     return div;
                 }
             }
-            string error = "Couldn't find advert with title: " + Title;
+            string error = $"Couldn't find advert with title: {Title}";
             log.Error(error);
-            throw new NoSuchElementException("Couldn't find advert with title: " + Title);
+            throw new NoSuchElementException(error);
         }
 
         private Advert ClickRefreshIcon(IWebElement advertDiv)
@@ -115,27 +117,27 @@ namespace pets4home.core
 
         public override string ToString()
         {
-            return String.Format("Advert: '{0}'|{1} {2}", 
-                Title, FirstName, LastName);
+            return $"Advert: '{Title}'|{FirstName} {LastName}";
         }
 
         void ISchedulerTask.Execute()
         {
             if (!Enabled)
             {
-                log.Debug("Execute called on task that is not enabled: " + Name);
+                log.Debug($"Execute called on task that is not enabled: {Name}");
                 return;
             }
 
-            log.Info("Executing task: " + Name);
+            log.Info($"Executing task: {Name}");
             Refresh();
         }
 
         public static Advert fromProperties(IDictionary<string, string> properties)
         {
             double intervalMins = Double.Parse(properties["intervalMins"]);
+            double rangeMins = Double.Parse(properties["rangeMins"]);
             Advert ad = new Advert(properties["login"], properties["password"], properties["title"],
-                TimeSpan.FromMinutes(intervalMins));
+                TimeSpan.FromMinutes(intervalMins), TimeSpan.FromMinutes(rangeMins));
             ad.FirstName = properties["firstName"];
             ad.LastName = properties["lastName"];
             ad.Enabled = Boolean.Parse(properties["enabled"]);
